@@ -198,7 +198,10 @@ class COctetStringEncoder(PDUNullableFieldEncoder):
         self.decodeErrorStatus = kwargs.get('decodeErrorStatus', self.decodeErrorStatus)
 
     def _encode(self, value):
-        asciiVal = value.encode('ascii')
+        if isinstance(value, unicode):
+            asciiVal = value.encode('ascii', 'ignore')
+        else:
+            asciiVal = bytes(value)
         length = len(asciiVal)
         if self.maxSize is not None:
             if length + 1 > self.maxSize:
